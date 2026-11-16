@@ -1,0 +1,11 @@
+# Python:3.12
+target-version = "py312"
+
+# BSL standard line length.
+line-length = 100
+
+[lint]
+# Ruff v0.16 introduced stricter defaults. This locks the formatting standards to what we expect
+# from v0.15.x.
+select = ["E4", "E7", "E9", "F"]
+ignore = ["E501"] # line too long

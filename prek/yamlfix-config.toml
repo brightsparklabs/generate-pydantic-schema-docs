@@ -1,0 +1,4 @@
+none_representation = "~"
+# Preserve blank lines between sections.
+whitelines = 1
+section_whitelines = 1
