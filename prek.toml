@@ -10,12 +10,6 @@ rev = "v5.0.0"
 id = "end-of-file-fixer"
 
 [[repos.hooks]]
-id = "requirements-txt-fixer"
-# Exclude the requirements-dev.txt file of the `airflow` subproject as we want to keep our
-# dev dependencies separate from the dependencies provided by Airflow.
-exclude = "(subprojects/airflow/.*)"
-
-[[repos.hooks]]
 id = "trailing-whitespace"
 
 
