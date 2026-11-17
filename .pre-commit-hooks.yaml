@@ -1,0 +1,9 @@
+# For use with pre-commit.
+# See usage instructions at https://pre-commit.com
+
+- id: generate-pydantic-schema-docs
+  name: generate-pydantic-schema-docs
+  description: This hook runs generate-pydantic-schema-docs.
+  entry: generate-pydantic-schema-docs
+  language: python
+  types: [file, yaml]

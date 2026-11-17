@@ -29,7 +29,7 @@ help: ## Display this help section
 .PHONY: venv
 venv: ${VENV_NAME}/bin/activate  ## Create and update virtual environment.
 $(VENV_NAME)/bin/activate: pyproject.toml
-	uv sync
+	uv sync --group dev
 	touch ${VENV_NAME}/bin/activate
 
 .PHONY: lint

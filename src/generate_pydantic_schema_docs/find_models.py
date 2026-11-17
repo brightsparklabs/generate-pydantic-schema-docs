@@ -13,29 +13,9 @@ www.brightsparklabs.com
 import importlib
 import inspect
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from generate_pydantic_schema_docs.exceptions import ModelDiscoveryError
-
-# ------------------------------------------------------------------------------
-# PRIVATE FUNCTIONS
-# ------------------------------------------------------------------------------
-
-def _enable_attribute_docstrings(
-    models: list[type[BaseModel]],
-) -> None:
-    """
-    Enable attribute docstrings for discovered models.
-    
-    Args:
-        models: A list of pydantic models.
-    """
-
-    for model in models:
-        model.model_config = ConfigDict(
-            **model.model_config,
-            use_attribute_docstrings=True,
-        )
 
 # ------------------------------------------------------------------------------
 # PUBLIC FUNCTIONS
@@ -99,9 +79,6 @@ def find_models(
         raise ModelDiscoveryError(
             f"No Pydantic models found in '{module_name}'."
         )
-
-    # Enable the docstrings to be included when json schemas are generated.
-    models = _enable_attribute_docstrings(models)
 
     # Sort models.
     models = sorted(models, key=lambda model: model.__name__)

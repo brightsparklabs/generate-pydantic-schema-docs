@@ -1,0 +1,52 @@
+# Configuration file for `prek`, a git hook framework written in Rust.
+# See https://prek.j178.dev for more information.
+#:schema https://www.schemastore.org/prek.json
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v5.0.0"
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+
+[[repos.hooks]]
+id = "requirements-txt-fixer"
+# Exclude the requirements-dev.txt file of the `airflow` subproject as we want to keep our
+# dev dependencies separate from the dependencies provided by Airflow.
+exclude = "(subprojects/airflow/.*)"
+
+[[repos.hooks]]
+id = "trailing-whitespace"
+
+
+[[repos]]
+# Specify `local` to use local pip versions of the pre-commit libs.
+# This means we can pin to the version in the `requirements-dev.txt` file.
+repo = "local"
+
+[[repos.hooks]]
+id = "ruff-lint"
+name = "Ruff Linter"
+description = "https://github.com/charliermarsh/ruff"
+entry = ".venv/bin/ruff"
+language = "python"
+files = '\.py$'
+args = [
+  "check",
+  "--fix",
+  "--config",
+  "prek/ruff.toml"
+]
+
+[[repos.hooks]]
+id = "ruff-formatter"
+name = "Ruff Formatter"
+description = "https://github.com/charliermarsh/ruff"
+entry = ".venv/bin/ruff"
+language = "python"
+files = '\.py$'
+args = [
+  "format",
+  "--config",
+  "prek/ruff.toml"
+]
