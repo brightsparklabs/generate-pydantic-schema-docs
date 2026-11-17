@@ -18,9 +18,10 @@ from jinja2 import Environment, FileSystemLoader
 # PUBLIC FUNCTION
 # ------------------------------------------------------------------------------
 
+
 def render_ascii_docs(jinja2_context: dict[str, dict[str, Any]], output: Path) -> None:
     """Generate individual AsciiDoc files and an index for a module.
-    
+
     Args:
         jinja2_context: The jinja2 context.
     """
@@ -38,7 +39,6 @@ def render_ascii_docs(jinja2_context: dict[str, dict[str, Any]], output: Path) -
 
     # Generate individual model documentation.
     for model_name, model_context in jinja2_context.items():
-
         template = environment.get_template("schema.adoc.j2")
 
         output_path = output / f"{model_name.lower()}.adoc"

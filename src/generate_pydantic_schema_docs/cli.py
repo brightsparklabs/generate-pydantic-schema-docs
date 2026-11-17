@@ -15,9 +15,9 @@ from pathlib import Path
 import typer
 
 from generate_pydantic_schema_docs import (
-    find_models, 
-    generate_jinja2_context, 
-    generate_json_schema, 
+    find_models,
+    generate_jinja2_context,
+    generate_json_schema,
     render_ascii_docs,
 )
 
@@ -31,6 +31,7 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
+
 @app.command()
 def cli(
     module: str = typer.Option(..., help="Python module containing Pydantic models"),
@@ -43,7 +44,7 @@ def cli(
         output:
 
     Raises:
-        
+
     """
 
     output.mkdir(parents=True, exist_ok=True)

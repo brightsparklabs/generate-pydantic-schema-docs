@@ -21,6 +21,7 @@ from generate_pydantic_schema_docs.exceptions import ModelDiscoveryError
 # PUBLIC FUNCTIONS
 # ------------------------------------------------------------------------------
 
+
 def find_models(
     module_name: str,
     selected_models: list[str] | None = None,
@@ -35,7 +36,7 @@ def find_models(
         ModelDiscoveryError: Raised when the module could not be imported, selected models are not
             found, or if no models are found.
     Returns:
-        
+
     """
     # Try to import the module.
     try:
@@ -45,40 +46,31 @@ def find_models(
 
     models = []
     for _, object in inspect.getmembers(module, inspect.isclass):
-        # The last condition is to make sure that we are only getting the models which are defined 
+        # The last condition is to make sure that we are only getting the models which are defined
         # in the current module.
         if (
-            issubclass(object, BaseModel) and 
-            object is not BaseModel and 
-            object.__module__ == module.__name__
+            issubclass(object, BaseModel)
+            and object is not BaseModel
+            and object.__module__ == module.__name__
         ):
             models.append(object)
 
     # Filter out the selected models from the discovered models.
     if selected_models is not None:
-        model_map = {
-            model.__name__: model
-            for model in models
-        }
+        model_map = {model.__name__: model for model in models}
 
         # If any of the selected models were not found, throw an error.
         missing = set(selected_models) - set(model_map)
         if missing:
             raise ModelDiscoveryError(
-                f"Models not found in '{module_name}': "
-                f"{', '.join(sorted(missing))}"
+                f"Models not found in '{module_name}': {', '.join(sorted(missing))}"
             )
 
-        models = [
-            model_map[name]
-            for name in selected_models
-        ]
+        models = [model_map[name] for name in selected_models]
 
     # If no models were found, throw and error.
-    if models is []:
-        raise ModelDiscoveryError(
-            f"No Pydantic models found in '{module_name}'."
-        )
+    if models == []:
+        raise ModelDiscoveryError(f"No Pydantic models found in '{module_name}'.")
 
     # Sort models.
     models = sorted(models, key=lambda model: model.__name__)

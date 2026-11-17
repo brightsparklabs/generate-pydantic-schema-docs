@@ -16,6 +16,7 @@ from typing import Any
 # PUBLIC FUNCTIONS
 # ------------------------------------------------------------------------------
 
+
 def generate_jinja2_context(json_schemas: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Convert the json schemas to a jinja2 context.
 
@@ -31,14 +32,16 @@ def generate_jinja2_context(json_schemas: dict[str, dict[str, Any]]) -> dict[str
     for model_name, json_schema in json_schemas.items():
         required = set(json_schema.get("required", []))
         fields = []
-    
+
         for field_name, prop in json_schema.get("properties", {}).items():
-            fields.append({
-                "name": field_name,
-                "required": field_name in required,
-                "description": prop.get("description", ""),
-            })
-    
+            fields.append(
+                {
+                    "name": field_name,
+                    "required": field_name in required,
+                    "description": prop.get("description", ""),
+                }
+            )
+
         contexts[model_name] = {
             "title": json_schema.get("title", model_name),
             "description": json_schema.get("description", ""),
