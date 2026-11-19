@@ -12,6 +12,9 @@ www.brightsparklabs.com
 
 import importlib
 import inspect
+from pathlib import Path
+import pkgutil
+import sys
 
 from pydantic import BaseModel
 
@@ -22,9 +25,18 @@ from generate_pydantic_schema_docs.exceptions import ModelDiscoveryError
 # ------------------------------------------------------------------------------
 
 
+def import_package(module_name: str, module_path: Path):
+    sys.path.insert(0, str(module_path))
+
+    try:
+        return importlib.import_module(module_name)
+    finally:
+        sys.path.remove(str(module_path))
+
+
 def find_models(
     module_name: str,
-    selected_models: list[str] | None = None,
+    module_path: str,
 ) -> list[type[BaseModel]]:
     """Discover Pydantic models defined in a Python module.
 
@@ -40,33 +52,34 @@ def find_models(
     """
     # Try to import the module.
     try:
-        module = importlib.import_module(module_name)
+        module = import_package(module_name, module_path)
     except ImportError as e:
         raise ModelDiscoveryError(f"Could not import module '{module_name}': {e}") from e
 
     models = []
-    for _, object in inspect.getmembers(module, inspect.isclass):
-        # The last condition is to make sure that we are only getting the models which are defined
-        # in the current module.
-        if (
-            issubclass(object, BaseModel)
-            and object is not BaseModel
-            and object.__module__ == module.__name__
+
+    modules = [module]
+
+    # Discover submodules if this is a package.
+    if hasattr(module, "__path__"):
+        for _, submodule_name, _ in pkgutil.walk_packages(
+            module.__path__,
+            prefix=f"{module.__name__}.",
         ):
-            models.append(object)
+            if "test" in submodule_name.lower():
+                continue
 
-    # Filter out the selected models from the discovered models.
-    if selected_models is not None:
-        model_map = {model.__name__: model for model in models}
+            submodule = importlib.import_module(submodule_name)
+            modules.append(submodule)
 
-        # If any of the selected models were not found, throw an error.
-        missing = set(selected_models) - set(model_map)
-        if missing:
-            raise ModelDiscoveryError(
-                f"Models not found in '{module_name}': {', '.join(sorted(missing))}"
-            )
-
-        models = [model_map[name] for name in selected_models]
+    for current_module in modules:
+        for _, obj in inspect.getmembers(current_module, inspect.isclass):
+            if (
+                issubclass(obj, BaseModel)
+                and obj is not BaseModel
+                and obj.__module__ == current_module.__name__
+            ):
+                models.append(obj)
 
     # If no models were found, throw and error.
     if models == []:

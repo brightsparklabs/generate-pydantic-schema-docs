@@ -7,7 +7,7 @@
 == Fields
 
 {% for field in fields %}
-`{{ field.name }}` (`{{ field.type }}`{% if field.optional %}, Optional{% endif %}):: 
+`{{ field.name }}` (`{{ field.type }}`{% if field.optional %}, Optional{% endif %})::
 {{ field.description }}{% if field.constraints %}
 +
 Constraints: {{ field.constraints }}{% endif %}

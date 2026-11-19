@@ -49,7 +49,7 @@ def generate_json_schema(
         mode: The mode to generate the schemas. Defaults to `validation`.
     """
     # Enable the docstrings to be included when json schemas are generated.
-    models = _enable_attribute_docstrings(models)
+    _enable_attribute_docstrings(models)
 
     if models is None or models == []:
         return {}
