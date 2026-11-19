@@ -6,4 +6,5 @@
   description: This hook runs generate-pydantic-schema-docs.
   entry: generate-pydantic-schema-docs
   language: python
-  types: [file, yaml]
+  pass_filenames: false
+  types: [python]

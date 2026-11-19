@@ -40,11 +40,8 @@ def cli(
     """Generate AsciiDoc documentation from Pydantic models.
 
     Args:
-        module:
-        output:
-
-    Raises:
-
+        module: Python module to generate documents for.
+        output: The output directory to write the docs to.
     """
 
     output.mkdir(parents=True, exist_ok=True)
