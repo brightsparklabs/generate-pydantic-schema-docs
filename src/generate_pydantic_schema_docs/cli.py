@@ -60,8 +60,8 @@ def generate_pydantic_schema_docs(
 
 @app.command()
 def cli(
-    module: str = typer.Option(..., help="Python module containing Pydantic models"),
-    output: Path = typer.Option(..., help="Output AsciiDoc file"),
+    module: str = typer.Option(..., "--module", help="Python module containing Pydantic models"),
+    output: Path = typer.Option(..., "--output", help="Output AsciiDoc file"),
 ) -> None:
     """CLI entry point to generate AsciiDoc documentation from Pydantic models.
 
