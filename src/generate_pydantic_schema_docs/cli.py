@@ -32,10 +32,9 @@ app = typer.Typer(
 )
 
 
-@app.command()
-def cli(
-    module: str = typer.Option(..., help="Python module containing Pydantic models"),
-    output: Path = typer.Option(..., help="Output AsciiDoc file"),
+def generate_pydantic_schema_docs(
+    module: str,
+    output: Path,
 ) -> None:
     """Generate AsciiDoc documentation from Pydantic models.
 
@@ -57,3 +56,17 @@ def cli(
 
     # Render the templates with the context.
     render_ascii_docs(jinja2_context, output)
+
+
+@app.command()
+def cli(
+    module: str = typer.Option(..., help="Python module containing Pydantic models"),
+    output: Path = typer.Option(..., help="Output AsciiDoc file"),
+) -> None:
+    """CLI entry point to generate AsciiDoc documentation from Pydantic models.
+
+    Args:
+        module: Python module to generate documents for.
+        output: The output directory to write the docs to.
+    """
+    generate_pydantic_schema_docs(module, output)
