@@ -69,4 +69,6 @@ def cli(
         module: Python module to generate documents for.
         output: The output directory to write the docs to.
     """
+    print(f"Module: {module}, type: {type(module)}")
+    print(f"Output: {output}, type: {type(output)}")
     generate_pydantic_schema_docs(module, output)
