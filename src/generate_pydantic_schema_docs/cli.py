@@ -12,6 +12,7 @@ www.brightsparklabs.com
 
 from pathlib import Path
 
+from typing import Annotated
 import typer
 
 from generate_pydantic_schema_docs import (
@@ -60,8 +61,10 @@ def generate_pydantic_schema_docs(
 
 @app.command()
 def cli(
-    module: str = typer.Option(..., "--module", help="Python module containing Pydantic models"),
-    output: Path = typer.Option(..., "--output", help="Output AsciiDoc file"),
+    module: Annotated[
+        str, typer.Option("--module", help="Python module containing Pydantic models")
+    ],
+    output: Annotated[Path, typer.Option("--output", help="Output AsciiDoc file")],
 ) -> None:
     """CLI entry point to generate AsciiDoc documentation from Pydantic models.
 
