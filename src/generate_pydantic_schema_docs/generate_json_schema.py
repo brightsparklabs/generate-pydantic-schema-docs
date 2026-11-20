@@ -12,31 +12,13 @@ www.brightsparklabs.com
 
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from generate_pydantic_schema_docs.exceptions import SchemaGenerationError
 
 # ------------------------------------------------------------------------------
-# PRIVATE FUNCTIONS
+# PUBLIC FUNCTIONS
 # ------------------------------------------------------------------------------
-
-
-def _enable_attribute_docstrings(
-    models: List[type[BaseModel]],
-) -> None:
-    """
-    Enable attribute docstrings for discovered models.
-
-    Args:
-        models: A list of pydantic models.
-    """
-
-    for model in models:
-        model.model_config = ConfigDict(
-            **model.model_config,
-            use_attribute_docstrings=True,
-        )
-        model.model_rebuild(force=True)
 
 
 def generate_json_schema(
@@ -49,8 +31,6 @@ def generate_json_schema(
         models: The pydantic models.
         mode: The mode to generate the schemas. Defaults to `validation`.
     """
-    # Enable the docstrings to be included when json schemas are generated.
-    _enable_attribute_docstrings(models)
 
     if models is None or models == []:
         return {}
