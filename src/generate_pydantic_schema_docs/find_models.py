@@ -78,7 +78,7 @@ def _discover_modules(module_path: Path) -> list[ModuleType]:
         if parts[-1] == "__init__":
             parts = parts[:-1]
 
-        if parts == [] or parts is None:
+        if len(parts) == 0 or parts is None:
             continue
 
         submodule_name = f"{module_name}.{'.'.join(parts)}"
@@ -119,7 +119,7 @@ def _discover_models(modules: list[ModuleType]) -> List[type[object]]:
                 models.append(obj)
 
     # If no models were found, throw and error.
-    if models == []:
+    if len(models) == 0:
         raise ModelDiscoveryError("No Pydantic models found.")
 
     # Sort models.
