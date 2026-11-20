@@ -1,0 +1,44 @@
+= Generate Pydantic Schema Docs
+
+== Overview
+
+This library can be leveraged to generated ASCII documentation for pydantic models.
+
+This tool can be used either as a CLI tool or configured to be used with `pre-commit` or `prek`.
+
+== Example Prek Configuration
+
+Since there's no release that has been cut, the repo can be tested with a local clone like the
+following:
+
+```
+[[repos]]
+repo = "/path/to/generate-pydantic-schema-docs"
+rev = "HEAD"
+
+[[repos.hooks]]
+id = "generate-pydantic-schema-docs"
+name = "Generate Pydantic schema documentation"
+language = "system"
+entry = "uv run --no-active --project subprojects/{PYTHON_SUBPROJECT} generate-pydantic-schema-docs"
+always_run = true
+pass_filenames = false
+args = [
+    "--module-path",
+    "subprojects/{PYTHON_SUBPROJECT}/{PYTHON_MODULE}",
+    "--output",
+    "subprojects/docs/{somewhere to store the generated files.}/",
+```
+
+NOTE: For the descriptions doc strings to be loaded in the documents, the `use_attribute_docstring`
+option must be enabled on the pydantic models.
+It is recommended that the project have a `BaseModel` where this is enabled like the following:
+
+```
+from pydantic import BaseModel as PydanticBaseModel
+
+class BaseModel(PydanticBaseModel):
+  """Base Model with use attribute docstrings enabled."""
+
+  model_config = ConfigDict(use_attribute_docstrings=True)
+```
