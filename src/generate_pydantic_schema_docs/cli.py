@@ -32,7 +32,6 @@ app = typer.Typer(
 
 
 def generate_pydantic_schema_docs(
-    module: str,
     module_path: Path,
     output: Path,
 ) -> None:
@@ -46,9 +45,7 @@ def generate_pydantic_schema_docs(
     output.mkdir(parents=True, exist_ok=True)
 
     # Find models in the python module.
-    module = module_path.name
-    module_path = module_path.parent
-    models = find_models(module, module_path)
+    models = find_models(module_path)
     typer.echo(f"Found models: {models}")
 
     # Generate the JSON schemas.
@@ -65,21 +62,16 @@ def generate_pydantic_schema_docs(
 
 @app.command()
 def cli(
-    module: Annotated[
-        str, typer.Option("--module", help="Python module containing Pydantic models")
-    ],
-    module_path: Annotated[Path, typer.Option("--module_path", help="Python module path.")],
+    module_path: Annotated[Path, typer.Option("--module-path", help="Python module path.")],
     output: Annotated[Path, typer.Option("--output", help="Output AsciiDoc file")],
 ) -> None:
     """CLI entry point to generate AsciiDoc documentation from Pydantic models.
 
     Args:
-        module: Python module to generate documents for.
+        module_path: Python module to generate documents for.
         output: The output directory to write the docs to.
     """
-    print(f"Module: {module}, type: {type(module)}")
-    print(f"Output: {output}, type: {type(output)}")
-    generate_pydantic_schema_docs(module, module_path, output)
+    generate_pydantic_schema_docs(module_path, output)
 
 
 if __name__ == "__main__":

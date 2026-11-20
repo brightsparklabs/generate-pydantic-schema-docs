@@ -10,14 +10,14 @@ www.brightsparklabs.com
 # IMPORT
 # ------------------------------------------------------------------------------
 
-from typing import Any
+from typing import Any, Dict
 
 # ------------------------------------------------------------------------------
 # PUBLIC FUNCTIONS
 # ------------------------------------------------------------------------------
 
 
-def generate_jinja2_context(json_schemas: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def generate_jinja2_context(json_schemas: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     """Convert the json schemas to a jinja2 context.
 
     Args:

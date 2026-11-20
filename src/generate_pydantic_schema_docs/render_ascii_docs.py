@@ -11,7 +11,7 @@ www.brightsparklabs.com
 # ------------------------------------------------------------------------------
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 from jinja2 import Environment, FileSystemLoader
 
 # ------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ from jinja2 import Environment, FileSystemLoader
 # ------------------------------------------------------------------------------
 
 
-def render_ascii_docs(jinja2_context: dict[str, dict[str, Any]], output: Path) -> None:
+def render_ascii_docs(jinja2_context: Dict[str, Dict[str, Any]], output: Path) -> None:
     """Generate individual AsciiDoc files and an index for a module.
 
     Args:

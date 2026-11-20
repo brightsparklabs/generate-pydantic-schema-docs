@@ -10,7 +10,7 @@ www.brightsparklabs.com
 # IMPORT
 # ------------------------------------------------------------------------------
 
-from typing import Any
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, ConfigDict
 
@@ -22,7 +22,7 @@ from generate_pydantic_schema_docs.exceptions import SchemaGenerationError
 
 
 def _enable_attribute_docstrings(
-    models: list[type[BaseModel]],
+    models: List[type[BaseModel]],
 ) -> None:
     """
     Enable attribute docstrings for discovered models.
@@ -40,8 +40,8 @@ def _enable_attribute_docstrings(
 
 
 def generate_json_schema(
-    models: list[type[BaseModel]], mode: str = "validation"
-) -> dict[str, dict[str, Any]]:
+    models: List[type[BaseModel]], mode: str = "validation"
+) -> Dict[str, Dict[str, Any]]:
     """Generate JSON schemas from the pydantic models.
     Save the JSON schemas to a temporary folder.
 
