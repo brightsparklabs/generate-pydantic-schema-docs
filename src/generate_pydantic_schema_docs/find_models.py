@@ -13,7 +13,6 @@ www.brightsparklabs.com
 import importlib
 import inspect
 from pathlib import Path
-import pkgutil
 import sys
 
 from pydantic import BaseModel
@@ -31,12 +30,12 @@ def import_package(module_name: str, module_path: Path):
     try:
         return importlib.import_module(module_name)
     finally:
-        sys.path.remove(str(module_path))
+        sys.path.insert(0, str(module_path))
 
 
 def find_models(
     module_name: str,
-    module_path: str,
+    module_path: Path,
 ) -> list[type[BaseModel]]:
     """Discover Pydantic models defined in a Python module.
 
@@ -57,23 +56,46 @@ def find_models(
         raise ModelDiscoveryError(f"Could not import module '{module_name}': {e}") from e
 
     models = []
-
     modules = [module]
 
-    # Discover submodules if this is a package.
-    if hasattr(module, "__path__"):
-        for _, submodule_name, _ in pkgutil.walk_packages(
-            module.__path__,
-            prefix=f"{module.__name__}.",
-        ):
-            if "test" in submodule_name.lower():
-                continue
+    module_path = module_path / module_name
 
+    # Discover submodules if this is a package.
+    for file_path in module_path.rglob("*.py"):
+        relative_path = file_path.relative_to(module_path)
+
+        # Skip test files and directories
+        if any("test" in part.lower() for part in relative_path.parts):
+            continue
+
+        # Convert file path to Python module name
+        parts = list(relative_path.with_suffix("").parts)
+
+        if parts[-1] == "__init__":
+            parts.pop()
+
+        if not parts:
+            continue
+        print(relative_path)
+        print(parts)
+
+        submodule_name = f"{module_name}.{'.'.join(parts)}"
+
+        try:
+            print(submodule_name)
             submodule = importlib.import_module(submodule_name)
             modules.append(submodule)
-
+        except ImportError:
+            print(f"Could not import {submodule_name}")
+            raise
+    print("All modules:", modules)
     for current_module in modules:
         for _, obj in inspect.getmembers(current_module, inspect.isclass):
+            print()
+            print("Found OBJ:", obj)
+            print("BaseModel", issubclass(obj, BaseModel))
+            print(obj.__module__, current_module.__name__)
+            print(obj.__module__ == current_module.__name__)
             if (
                 issubclass(obj, BaseModel)
                 and obj is not BaseModel

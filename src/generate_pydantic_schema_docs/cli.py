@@ -33,7 +33,7 @@ app = typer.Typer(
 
 def generate_pydantic_schema_docs(
     module: str,
-    module_path: str,
+    module_path: Path,
     output: Path,
 ) -> None:
     """Generate AsciiDoc documentation from Pydantic models.
@@ -46,6 +46,8 @@ def generate_pydantic_schema_docs(
     output.mkdir(parents=True, exist_ok=True)
 
     # Find models in the python module.
+    module = module_path.name
+    module_path = module_path.parent
     models = find_models(module, module_path)
     typer.echo(f"Found models: {models}")
 
@@ -66,7 +68,7 @@ def cli(
     module: Annotated[
         str, typer.Option("--module", help="Python module containing Pydantic models")
     ],
-    module_path: Annotated[str, typer.Option("--module_path", help="Python module path.")],
+    module_path: Annotated[Path, typer.Option("--module_path", help="Python module path.")],
     output: Annotated[Path, typer.Option("--output", help="Output AsciiDoc file")],
 ) -> None:
     """CLI entry point to generate AsciiDoc documentation from Pydantic models.

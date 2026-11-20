@@ -36,6 +36,7 @@ def _enable_attribute_docstrings(
             **model.model_config,
             use_attribute_docstrings=True,
         )
+        model.model_rebuild(force=True)
 
 
 def generate_json_schema(
